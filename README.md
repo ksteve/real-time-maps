@@ -1,6 +1,6 @@
-# abcde
+# real-time-maps
 
-> A Vue.js project
+Collaborate in real-time on Google Maps
 
 ## Build Setup
 
