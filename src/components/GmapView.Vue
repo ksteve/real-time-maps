@@ -1,8 +1,9 @@
 <template>
     <div>
-      <!-- <div class="google-map" :id="mapName"/> -->
+
           <v-layout flex justify-center>
-      <gmap-map
+
+      <!-- <gmap-map
           :center="{lat:10, lng:10}"
           :zoom="7"
           style="width: 800px; height: 800px"
@@ -15,15 +16,17 @@
             :draggable="true"
             @click="center=m.position"
           ></gmap-marker>
-        </gmap-map>
+        </gmap-map> -->
+            <div class="google-map" :id="mapName" @contextmenu="show"/>
+          <v-menu offset-y v-model="showMenu" absolute full-width :position-x="x" :position-y="y">
+
+            <v-list>
+              <v-list-tile v-for="item in items" :key="item.title" @click="openMarkerDialog">
+                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
           </v-layout>
-          <v-menu offset-y v-model="showMenu" absolute :position-x="x" :position-y="y">
-        <v-list>
-        <v-list-tile v-for="item in items" :key="item.title" @click="">
-            <v-list-tile-title @click="openMarkerDialog">{{ item.title }}</v-list-tile-title>
-        </v-list-tile>
-        </v-list>
-    </v-menu>
       <!-- <v-map class="vmap" :zoom=13 :center="[47.413220, -1.219482]"
         @l-contextmenu="show">
          <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
@@ -31,44 +34,34 @@
      <v-dialog v-model="showDialog" persistent max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">User Profile</span>
+          <span class="headline">Marker</span>
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Legal first name" required></v-text-field>
+              <v-flex xs3 sm3>
+              <v-select
+                label="Color"
+                v-bind:items="srcs">
+                 <template slot="selection" slot-scope="data">
+                  <v-avatar>
+                    <img :src="data.item.img">
+                  </v-avatar>
+                </template>
+                <template slot="item" slot-scope="data">
+                  <template>
+                    <v-list-tile-avatar>
+                      <img v-bind:src="data.item.img"/>
+                    </v-list-tile-avatar>
+                  </template>
+                </template>
+              </v-select>
               </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
+              <v-flex xs12 sm12 md12>
+                <v-text-field label="Name" required></v-text-field>
               </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Legal last name" hint="example of persistent helper text"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field label="Email" required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field label="Password" type="password" required></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-select
-                  label="Age"
-                  required
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                ></v-select>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-select
-                  label="Interests"
-                  multiple
-                  autocomplete
-                  chips
-                  :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                ></v-select>
+              <v-flex xs12 sm12 md12>
+                <v-text-field label="Description" required></v-text-field>
               </v-flex>
             </v-layout>
           </v-container>
@@ -86,7 +79,32 @@
 <script>
 export default {
   name: 'google-map',
-  props: ['name'],
+  props: {
+    'name': { 
+      type : String,
+      default: function(){
+        return "hello"
+      }
+    },
+    'latitude': {
+      type: Number,
+      default: function(){
+        return 39.50
+      }
+    },
+    'longitude': {
+      type: Number,
+      default: function(){
+        return -98.35
+      }
+    },
+    'zoom': {
+      type: Number,
+      default: function(){
+        return 4
+      }
+    }
+  },
   data: function () {
     return {
       mapName: this.name + "-map",
@@ -100,61 +118,67 @@ export default {
         latitude: 51.4998973,
         longitude: -0.202432
       }],
-      map: null,
+     // map: null,
       bounds: null,
       markers: [],
       showMenu: false,
       showDialog: false,
-      x: 0,
-      y: 0,
-      lat: 0,
-      lng: 0,
+      //lat: 0,
+      //lng: 0,
       items: [
         { title: 'Add Marker' }
+      ],
+      srcs: [
+        {img: '/src/assets/marker.png'},
+        {img: '/src/assets/marker.png'},
+        {img: '/src/assets/marker.png'},
+        {img: '/src/assets/marker.png'},
+        {img: '/src/assets/marker.png'}
       ]
     }
   },
-  //   mounted: function () {
-  //   this.bounds = new google.maps.LatLngBounds();
-  //   const element = document.getElementById(this.mapName)
-  //   const mapCentre = this.markerCoordinates[0]
-  //   const options = {
-  //     center: new google.maps.LatLng(mapCentre.latitude, mapCentre.longitude)
-  //   }
-  //   this.map = new google.maps.Map(element, options);
-  //   this.markerCoordinates.forEach((coord) => {
-  //     const position = new google.maps.LatLng(coord.latitude, coord.longitude);
-  //     const marker = new google.maps.Marker({ 
-  //       position,
-  //       map: this.map
-  //     });
-  //   this.markers.push(marker)
-  //     this.map.fitBounds(this.bounds.extend(position))
-  //   });
-  //   this.map.addListener('rightclick', function(e) {
-  //     console.log(e)
-  //       this.show(window.event);
-  //       this.lat = e.latLng.lat();
-  //       this.lng = e.latLng.lng();
-  //       this.x = window.event.clientX
-  //       this.y = window.event.clientY
-  //   }.bind(this));
-  // },
+  mounted() {
+    //'this.bounds = new google.maps.LatLngBounds();
+    const element = document.getElementById(this.mapName)
+   // 'const mapCentre = this.markerCoordinates[0]
+    // const options = {
+    //   center: new google.maps.LatLng(mapCentre.latitude, mapCentre.longitude)
+    // }
+     this.map = new google.maps.Map(element, {
+        center: {lat: this.latitude, lng: this.longitude},
+        zoom: this.zoom
+      });
+
+      this.map.addListener('rightclick', this.show);
+
+    // this.markerCoordinates.forEach((coord) => {
+    //   const position = new google.maps.LatLng(coord.latitude, coord.longitude);
+    //   const marker = new google.maps.Marker({ 
+    //     position,
+    //     map: this.map
+    //   });
+    // this.markers.push(marker)
+    //   this.map.fitBounds(this.bounds.extend(position))
+    // });
+
+  },
   methods : {
     show (e) {
         console.log(e);
-        this.x = window.event.clientX;
-        this.y = window.event.clientY;
+        this.showMenu = false
         this.lat = e.latLng.lat();
         this.lng = e.latLng.lng();
-        this.showMenu = false
+        this.x = window.event.clientX;
+        this.y = window.event.clientY;
         this.$nextTick(() => {
-        this.showMenu = true
-        })
+          this.showMenu = true
+        });
     },
     openMarkerDialog : function(event){
       this.showMenu = false;
-      this.showDialog = true;
+      this.$nextTick(() => {
+        this.showDialog = true;
+      });
     },
     addMarker : function(){
       this.showDialog = false
@@ -166,11 +190,14 @@ export default {
 };
 </script>
 <style scoped>
+  .menu {
+    max-width: 600px;
+  }
 
-.vmap {
-  width: 800px;
-  height: 800px;
-  margin: 0 auto;
-  background: gray;
-}
+  .google-map {
+    width: 1000px;
+    height: 800px;
+    margin: 0 auto;
+    background: gray;
+  }
 </style>

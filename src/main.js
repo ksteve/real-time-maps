@@ -13,14 +13,14 @@ Vue.component('v-map', Vue2Leaflet.Map);
 Vue.component('v-tilelayer', Vue2Leaflet.TileLayer);
 Vue.component('v-marker', Vue2Leaflet.Marker);
  
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: 'AIzaSyCxVHLbMJQxofyadngJdJdbAVvFVnFBMUY'
-   // libraries: 'places', // This is required if you use the Autocomplete plugin
-    // OR: libraries: 'places,drawing'
-    // OR: libraries: 'places,drawing,visualization'
-  }
-})
+// Vue.use(VueGoogleMaps, {
+//   load: {
+//     key: 'AIzaSyCxVHLbMJQxofyadngJdJdbAVvFVnFBMUY'
+//    // libraries: 'places', // This is required if you use the Autocomplete plugin
+//     // OR: libraries: 'places,drawing'
+//     // OR: libraries: 'places,drawing,visualization'
+//   }
+// })
 Vue.use(Vuetify)
 Vue.use(VueSocketio, 'http://localhost:3000');
 
