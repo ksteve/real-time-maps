@@ -8,6 +8,9 @@ Collaborate in real-time on Google Maps
 # install dependencies
 npm install
 
+#start server
+npm start
+
 # serve with hot reload at localhost:8080
 npm run dev
 
